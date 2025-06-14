@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>XIS CHAT</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="chat-body">
+  <div class="chat-box">
+    <div class="chat-header">XIS CHAT 💬</div>
+    <div class="chat-messages" id="messages"></div>
+    <div class="chat-input">
+      <input id="messageInput" type="text" placeholder="Type your message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
