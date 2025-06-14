@@ -1,17 +1,15 @@
-<!-- signup.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
   <title>XIS CHAT - Sign Up</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="login-body">
   <div class="login-box">
-    <h1>Create Account 🧾</h1>
-    <input type="text" id="newUsername" placeholder="New Username" required />
-    <input type="password" id="newPassword" placeholder="New Password" required />
-    <button id="signupBtn">Sign Up</button>
+    <h1>Create Account</h1>
+    <input type="text" id="newUsername" placeholder="New Username" />
+    <input type="password" id="newPassword" placeholder="New Password" />
+    <button id="signupBtn" type="button">Sign Up</button>
     <p id="signup-msg" class="error"></p>
     <p>Already have an account? <a href="index.html">Login</a></p>
   </div>
@@ -29,7 +27,7 @@
 
       const data = await res.json();
       if (data.success) {
-        window.location.href = 'index.html'; // Go to login
+        window.location.href = 'index.html';
       } else {
         document.getElementById('signup-msg').innerText = data.message;
       }
