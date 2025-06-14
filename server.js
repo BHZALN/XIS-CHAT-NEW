@@ -15,6 +15,24 @@ app.post('/login', (req, res) => {
   const found = users.find(u => u.username === username && u.password === password);
   res.json({ success: !!found });
 });
+app.post('/signup', (req, res) => {
+  const { username, password } = req.body;
+  const users = JSON.parse(fs.readFileSync('users.json'));
+
+  // check if username already exists
+  const exists = users.find(u => u.username === username);
+  if (exists) {
+    return res.json({ success: false, message: 'Username already exists' });
+  }
+
+  // add new user
+  users.push({ username, password });
+
+  // save to users.json
+  fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
+
+  res.json({ success: true });
+});
 
 // Chat system
 io.on('connection', socket => {
