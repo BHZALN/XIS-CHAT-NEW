@@ -1,34 +1,41 @@
-const socket = io();
-const user = localStorage.getItem('user');
-const input = document.getElementById('messageInput');
-const messages = document.getElementById('messages');
+// LOGIN
+document.getElementById('loginBtn')?.addEventListener('click', async () => {
+  const username = document.getElementById('loginUsername').value;
+  const password = document.getElementById('loginPassword').value;
 
-socket.emit('user joined', user);
+  const res = await fetch('/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
 
-socket.on('chat message', ({ user, msg, time }) => {
-  const el = document.createElement('div');
-  el.className = 'message';
-  el.innerHTML = `<span>${user}</span> [${time}]: ${msg}`;
-  messages.appendChild(el);
-  messages.scrollTop = messages.scrollHeight;
-});
-
-socket.on('system message', text => {
-  const el = document.createElement('div');
-  el.className = 'system';
-  el.textContent = text;
-  messages.appendChild(el);
-  messages.scrollTop = messages.scrollHeight;
-});
-
-function sendMessage() {
-  const msg = input.value.trim();
-  if (msg) {
-    socket.emit('chat message', { user, msg });
-    input.value = '';
+  const data = await res.json();
+  if (data.success) {
+    localStorage.setItem('username', username);
+    window.location.href = 'chat.html';
+  } else {
+    alert(data.message || 'Login failed');
   }
-}
-
-input.addEventListener('keydown', e => {
-  if (e.key === 'Enter') sendMessage();
 });
+
+// SIGNUP
+document.getElementById('signupBtn')?.addEventListener('click', async () => {
+  const username = document.getElementById('signupUsername').value;
+  const password = document.getElementById('signupPassword').value;
+
+  const res = await fetch('/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
+
+  const data = await res.json();
+  if (data.success) {
+    alert('Signup successful! Please login.');
+    window.location.href = '/';
+  } else {
+    alert(data.message || 'Signup failed');
+  }
+});
+
+
