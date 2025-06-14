@@ -1,0 +1,39 @@
+<!-- signup.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>XIS CHAT - Sign Up</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="login-body">
+  <div class="login-box">
+    <h1>Create Account 🧾</h1>
+    <input type="text" id="newUsername" placeholder="New Username" required />
+    <input type="password" id="newPassword" placeholder="New Password" required />
+    <button id="signupBtn">Sign Up</button>
+    <p id="signup-msg" class="error"></p>
+    <p>Already have an account? <a href="index.html">Login</a></p>
+  </div>
+
+  <script>
+    document.getElementById("signupBtn").addEventListener("click", async () => {
+      const username = document.getElementById('newUsername').value.trim();
+      const password = document.getElementById('newPassword').value.trim();
+
+      const res = await fetch('/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        window.location.href = 'index.html'; // Go to login
+      } else {
+        document.getElementById('signup-msg').innerText = data.message;
+      }
+    });
+  </script>
+</body>
+</html>
