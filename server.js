@@ -17,37 +17,26 @@ const usersPath = path.join(__dirname, 'users.json');
 
 // ✅ Add this route
 app.post('/signup', (req, res) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-    return res.json({ success: false, message: "Username and password required" });
-  }
-
-  let users = [];
   try {
-    if (fs.existsSync(usersPath)) {
-      const raw = fs.readFileSync(usersPath);
-      users = raw.length ? JSON.parse(raw) : [];
+    const { username, password } = req.body;
+    if (!username || !password) return res.json({ success: false, message: 'Missing fields' });
+
+    let users = fs.existsSync(usersPath) ? JSON.parse(fs.readFileSync(usersPath)) : [];
+
+    if (users.find(u => u.username === username)) {
+      return res.json({ success: false, message: 'Username already exists' });
     }
-  } catch (err) {
-    console.error("Error reading users.json:", err);
-    return res.status(500).json({ success: false, message: "Internal server error" });
-  }
 
-  if (users.some(u => u.username === username)) {
-    return res.json({ success: false, message: "Username already exists" });
-  }
-
-  users.push({ username, password });
-
-  try {
+    users.push({ username, password });
     fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
-    res.json({ success: true });
+    return res.json({ success: true });
+
   } catch (err) {
-    console.error("Error writing to users.json:", err);
-    res.status(500).json({ success: false, message: "Failed to save user" });
+    console.error(err);
+    return res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+
 
 // ✅ Optional: Existing login route
 app.post('/login', (req, res) => {
