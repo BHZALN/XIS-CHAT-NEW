@@ -2,6 +2,14 @@ const socket = io();
 const user = localStorage.getItem('user');
 const input = document.getElementById('messageInput');
 const messages = document.getElementById('messages');
+let data = {};
+try {
+  data = await res.json();
+} catch (e) {
+  alert("Server error or invalid response");
+  return;
+}
+
 
 socket.emit('user joined', user);
 
