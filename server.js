@@ -51,15 +51,22 @@ app.post('/signup', (req, res) => {
 
 // ✅ Optional: Existing login route
 app.post('/login', (req, res) => {
-  // your login code here
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) return res.json({ success: false, message: 'Missing credentials' });
+
+    const users = fs.existsSync(usersPath) ? JSON.parse(fs.readFileSync(usersPath)) : [];
+    const user = users.find(u => u.username === username && u.password === password);
+
+    if (user) return res.json({ success: true });
+    return res.json({ success: false, message: 'Invalid credentials' });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
-// ✅ Optional: Socket.IO real-time chat
-io.on('connection', (socket) => {
-  socket.on('chat message', (data) => {
-    io.emit('chat message', data);
-  });
-});
 
 // ✅ Start server
 server.listen(PORT, () => {
